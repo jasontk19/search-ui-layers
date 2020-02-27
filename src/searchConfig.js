@@ -1,43 +1,50 @@
 import AppSearchAPIConnector from "@elastic/search-ui-app-search-connector";
 import moment from "moment";
 
-const connector = new AppSearchAPIConnector({
+const apiConnector = new AppSearchAPIConnector({
   searchKey: "search-371auk61r2bwqtdzocdgutmg",
   engineName: "search-ui-examples",
   hostIdentifier: "host-2376rb",
   endpointBase: ""
 });
 
-export const config = {
-  alwaysSearchOnInitialLoad: true,
-  initialState: {
-    filters: [
-      {
-        field: "states",
-        values: ["Alaska"],
-        type: "any"
-      }
-    ]
-  },
-  searchQuery: {
-    result_fields: {
-      title: {
-        snippet: {
-          size: 100,
-          fallback: true
-        }
-      },
-      nps_link: {
-        raw: {}
-      },
-      description: {
-        snippet: {
-          size: 100,
-          fallback: true
-        }
+const initialState = {
+  filters: [
+    {
+      field: "states",
+      values: ["Alaska"],
+      type: "any"
+    }
+  ]
+};
+
+const onSearch = async (requestState, queryConfig) => {
+  console.log('onSearch:requestState -', requestState);
+  console.log('onSearch:queryConfig -', queryConfig);
+  return {
+
+  };
+}
+
+const searchQuery = {
+  result_fields: {
+    title: {
+      snippet: {
+        size: 100,
+        fallback: true
       }
     },
-    disjunctiveFacets: ["acres", "states", "date_established", "location"],
+    nps_link: {
+      raw: {}
+    },
+    description: {
+      snippet: {
+        size: 100,
+        fallback: true
+      }
+    }
+  },
+  disjunctiveFacets: ["acres", "states", "date_established", "location"],
     facets: {
       world_heritage_site: { type: "value" },
       states: { type: "value", size: 30 },
@@ -63,7 +70,6 @@ export const config = {
       },
       date_established: {
         type: "range",
-
         ranges: [
           {
             from: moment()
@@ -101,30 +107,13 @@ export const config = {
         ]
       }
     }
-  },
-  autocompleteQuery: {
-    results: {
-      resultsPerPage: 5,
-      result_fields: {
-        title: {
-          snippet: {
-            size: 100,
-            fallback: true
-          }
-        },
-        nps_link: {
-          raw: {}
-        }
-      }
-    },
-    suggestions: {
-      types: {
-        documents: {
-          fields: ["title"]
-        }
-      },
-      size: 4
-    }
-  },
-  apiConnector: connector
+}
+
+export const config = {
+  alwaysSearchOnInitialLoad: true,
+  trackUrlState: false,
+  initialState,
+  // onSearch,
+  searchQuery,
+  apiConnector
 };
