@@ -1,0 +1,606 @@
+{
+  "wasSearched": true,
+  "current": 1,
+  "filters": [
+    {
+      "field": "dataCenter",
+      "values": ["LANCEAMSR2"],
+      "type": "any"
+    }
+  ],
+  "resultsPerPage": 20,
+  "searchTerm": "mountains",
+  "sortDirection": "",
+  "sortField": "",
+  "autocompletedResults": [],
+  "autocompletedResultsRequestId": "",
+  "autocompletedSuggestions": {},
+  "autocompletedSuggestionsRequestId": "",
+  "error": "",
+  "isLoading": false,
+  "facets": {
+    "states": [
+      {
+        "field": "states",
+        "type": "value",
+        "data": [
+          {
+            "count": 5,
+            "value": "Alaska"
+          },
+          {
+            "count": 4,
+            "value": "California"
+          },
+          {
+            "count": 3,
+            "value": "Utah"
+          },
+          {
+            "count": 3,
+            "value": "Washington"
+          },
+          {
+            "count": 2,
+            "value": "Colorado"
+          },
+          {
+            "count": 2,
+            "value": "Montana"
+          },
+          {
+            "count": 2,
+            "value": "Nevada"
+          },
+          {
+            "count": 2,
+            "value": "Texas"
+          },
+          {
+            "count": 2,
+            "value": "Wyoming"
+          },
+          {
+            "count": 1,
+            "value": "American Samoa"
+          },
+          {
+            "count": 1,
+            "value": "Arizona"
+          },
+          {
+            "count": 1,
+            "value": "Arkansas"
+          },
+          {
+            "count": 1,
+            "value": "Idaho"
+          },
+          {
+            "count": 1,
+            "value": "Maine"
+          },
+          {
+            "count": 1,
+            "value": "North Carolina"
+          },
+          {
+            "count": 1,
+            "value": "Oregon"
+          },
+          {
+            "count": 1,
+            "value": "South Dakota"
+          },
+          {
+            "count": 1,
+            "value": "Tennessee"
+          },
+          {
+            "count": 1,
+            "value": "US Virgin Islands"
+          },
+          {
+            "count": 1,
+            "value": "Virginia"
+          }
+        ]
+      }
+    ],
+    "acres": [
+      {
+        "field": "acres",
+        "type": "range",
+        "data": [
+          {
+            "count": 32,
+            "value": {
+              "from": -1,
+              "name": "Any"
+            }
+          },
+          {
+            "count": 0,
+            "value": {
+              "to": 1000,
+              "from": 0,
+              "name": "Small"
+            }
+          },
+          {
+            "count": 8,
+            "value": {
+              "to": 100000,
+              "from": 1001,
+              "name": "Medium"
+            }
+          },
+          {
+            "count": 24,
+            "value": {
+              "from": 100001,
+              "name": "Large"
+            }
+          }
+        ]
+      }
+    ],
+    "date_established": [
+      {
+        "field": "date_established",
+        "type": "range",
+        "data": [
+          {
+            "count": 9,
+            "value": {
+              "to": "1920-02-27T18: 26: 42.335Z",
+              "name": "More than 100 years ago"
+            }
+          },
+          {
+            "count": 11,
+            "value": {
+              "to": "1970-02-27T18: 26: 42.334Z",
+              "from": "1920-02-27T18: 26: 42.334Z",
+              "name": "50 - 100 years ago"
+            }
+          },
+          {
+            "count": 12,
+            "value": {
+              "from": "1970-02-27T18: 26: 42.333Z",
+              "name": "Within the last 50 years"
+            }
+          }
+        ]
+      }
+    ],
+    "visitors": [
+      {
+        "field": "visitors",
+        "type": "range",
+        "data": [
+          {
+            "count": 0,
+            "value": {
+              "to": 10000,
+              "from": 0,
+              "name": "0 - 10000"
+            }
+          },
+          {
+            "count": 5,
+            "value": {
+              "to": 100000,
+              "from": 10001,
+              "name": "10001 - 100000"
+            }
+          },
+          {
+            "count": 5,
+            "value": {
+              "to": 500000,
+              "from": 100001,
+              "name": "100001 - 500000"
+            }
+          },
+          {
+            "count": 7,
+            "value": {
+              "to": 1000000,
+              "from": 500001,
+              "name": "500001 - 1000000"
+            }
+          },
+          {
+            "count": 14,
+            "value": {
+              "to": 5000000,
+              "from": 1000001,
+              "name": "1000001 - 5000000"
+            }
+          },
+          {
+            "count": 0,
+            "value": {
+              "to": 10000000,
+              "from": 5000001,
+              "name": "5000001 - 10000000"
+            }
+          },
+          {
+            "count": 1,
+            "value": {
+              "from": 10000001,
+              "name": "10000001+"
+            }
+          }
+        ]
+      }
+    ],
+    "world_heritage_site": [
+      {
+        "field": "world_heritage_site",
+        "type": "value",
+        "data": [
+          {
+            "count": 25,
+            "value": "false"
+          },
+          {
+            "count": 7,
+            "value": "true"
+          }
+        ]
+      }
+    ]
+  },
+  "requestId": "7412331846367721984b9c1dddaaab89",
+  "results": [
+    {
+      "nps_link": {
+        "raw": "https: //www.nps.gov/gumo/index.htm"
+      },
+      "title": {
+        "snippet": "Guadalupe <em>Mountains</em>"
+      },
+      "description": {
+        "snippet": "This park contains Guadalupe Peak, the highest point in Texas, as well as the scenic McKittrick"
+      },
+      "id": {
+        "raw": "park_guadalupe-mountains"
+      },
+      "_meta": {
+        "score": 11.674518
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/grsm/index.htm"
+      },
+      "title": {
+        "snippet": "Great Smoky <em>Mountains</em>"
+      },
+      "description": {
+        "snippet": "The Great Smoky <em>Mountains</em>, part of the Appalachian <em>Mountains</em>, span a wide range of elevations"
+      },
+      "id": {
+        "raw": "park_great-smoky-mountains"
+      },
+      "_meta": {
+        "score": 9.194633
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/romo/index.htm"
+      },
+      "title": {
+        "snippet": "Rocky <em>Mountain</em>"
+      },
+      "description": {
+        "snippet": " including mule deer, bighorn sheep, black bears, and cougars inhabit its igneous <em>mountains</em>"
+      },
+      "id": {
+        "raw": "park_rocky-mountain"
+      },
+      "_meta": {
+        "score": 6.7659407
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/jotr/index.htm"
+      },
+      "title": {
+        "snippet": "Joshua Tree"
+      },
+      "description": {
+        "snippet": "Covering large areas of the Colorado and Mojave Deserts and the Little San Bernardino <em>Mountains</em>"
+      },
+      "id": {
+        "raw": "park_joshua-tree"
+      },
+      "_meta": {
+        "score": 3.7568367
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/grte/index.htm"
+      },
+      "title": {
+        "snippet": "Grand Teton"
+      },
+      "description": {
+        "snippet": " reflective piedmont lakes teem with endemic wildlife, with a backdrop of craggy <em>mountains</em> that rise abruptly from the sage-covered valley."
+      },
+      "id": {
+        "raw": "park_grand-teton"
+      },
+      "_meta": {
+        "score": 3.597363
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/glba/index.htm"
+      },
+      "title": {
+        "snippet": "Glacier Bay"
+      },
+      "description": {
+        "snippet": "Glacier Bay contains tidewater glaciers, <em>mountains</em>, fjords, and a temperate rainforest, and is home"
+      },
+      "id": {
+        "raw": "park_glacier-bay"
+      },
+      "_meta": {
+        "score": 3.2229686
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/npsa/index.htm"
+      },
+      "title": {
+        "snippet": "American Samoa"
+      },
+      "description": {
+        "snippet": ", volcanic <em>mountains</em>, and white beaches. The area is also home to flying foxes, brown boobies, sea turtles, and 900 species of fish."
+      },
+      "id": {
+        "raw": "park_american-samoa"
+      },
+      "_meta": {
+        "score": 3.1380184
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/grsa/index.htm"
+      },
+      "title": {
+        "snippet": "Great Sand Dunes"
+      },
+      "description": {
+        "snippet": ", and wetlands, the park also has alpine lakes, six 13,000-foot <em>mountains</em>, and old-growth forests."
+      },
+      "id": {
+        "raw": "park_great-sand-dunes"
+      },
+      "_meta": {
+        "score": 2.7476
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/shen/index.htm"
+      },
+      "title": {
+        "snippet": "Shenandoah"
+      },
+      "description": {
+        "snippet": "Shenandoah&#x27;s Blue Ridge <em>Mountains</em> are covered by hardwood forests that teem with a wide variety"
+      },
+      "id": {
+        "raw": "park_shenandoah"
+      },
+      "_meta": {
+        "score": 2.7476
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/noca/index.htm"
+      },
+      "title": {
+        "snippet": "North Cascades"
+      },
+      "description": {
+        "snippet": " Chelan National Recreation Areas. The highly glaciated <em>mountains</em> are spectacular examples of Cascade"
+      },
+      "id": {
+        "raw": "park_north-cascades"
+      },
+      "_meta": {
+        "score": 2.7476
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/glac/index.htm"
+      },
+      "title": {
+        "snippet": "Glacier"
+      },
+      "description": {
+        "snippet": " the Going-to-the-Sun Road in this region of rapidly receding glaciers. The local <em>mountains</em>, formed"
+      },
+      "id": {
+        "raw": "park_glacier"
+      },
+      "_meta": {
+        "score": 2.7163284
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/bibe/index.htm"
+      },
+      "title": {
+        "snippet": "Big Bend"
+      },
+      "description": {
+        "snippet": " in the arid Chisos <em>Mountains</em> and in canyons along the river. A wide variety of Cretaceous and Tertiary"
+      },
+      "id": {
+        "raw": "park_big-bend"
+      },
+      "_meta": {
+        "score": 2.2440195
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/wrst/index.htm"
+      },
+      "title": {
+        "snippet": "Wrangell–St. Elias"
+      },
+      "description": {
+        "snippet": " include many of the continent&#x27;s tallest <em>mountains</em> and volcanoes, including the 18,008-foot Mount Saint"
+      },
+      "id": {
+        "raw": "park_wrangell–st.-elias"
+      },
+      "_meta": {
+        "score": 2.2427974
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/olym/index.htm"
+      },
+      "title": {
+        "snippet": "Olympic"
+      },
+      "description": {
+        "snippet": " shoreline to temperate rainforests to the alpine slopes of the Olympic <em>Mountains</em>, the tallest of which"
+      },
+      "id": {
+        "raw": "park_olympic"
+      },
+      "_meta": {
+        "score": 2.2427974
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/hosp/index.htm"
+      },
+      "title": {
+        "snippet": "Hot Springs"
+      },
+      "description": {
+        "snippet": " that flow out of the low lying Ouachita <em>Mountains</em>. The springs provide opportunities for relaxation"
+      },
+      "id": {
+        "raw": "park_hot-springs"
+      },
+      "_meta": {
+        "score": 2.1999114
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/mora/index.htm"
+      },
+      "title": {
+        "snippet": "Mount Rainier"
+      },
+      "description": {
+        "snippet": " United States. The <em>mountain</em> is popular for climbing, and more than half of the park is covered"
+      },
+      "id": {
+        "raw": "park_mount-rainier"
+      },
+      "_meta": {
+        "score": 2.0835462
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/sagu/index.htm"
+      },
+      "title": {
+        "snippet": "Saguaro"
+      },
+      "description": {
+        "snippet": "Split into the separate Rincon <em>Mountain</em> and Tucson <em>Mountain</em> districts, this park is evidence"
+      },
+      "id": {
+        "raw": "park_saguaro"
+      },
+      "_meta": {
+        "score": 1.8237921
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/acad/index.htm"
+      },
+      "title": {
+        "snippet": "Acadia"
+      },
+      "description": {
+        "snippet": " <em>mountain</em> on the Atlantic coast of the United States, granite peaks, ocean shoreline, woodlands, and lakes. There are freshwater, estuary, forest, and intertidal habitats."
+      },
+      "id": {
+        "raw": "park_acadia"
+      },
+      "_meta": {
+        "score": 1.5307189
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/lacl/index.htm"
+      },
+      "title": {
+        "snippet": "Lake Clark"
+      },
+      "description": {
+        "snippet": " as an abundance of rivers, glaciers, and waterfalls. Temperate rainforests, a tundra plateau, and three <em>mountain</em> ranges complete the landscape."
+      },
+      "id": {
+        "raw": "park_lake-clark"
+      },
+      "_meta": {
+        "score": 1.5307189
+      }
+    },
+    {
+      "nps_link": {
+        "raw": "https://www.nps.gov/dena/index.htm"
+      },
+      "title": {
+        "snippet": "Denali"
+      },
+      "description": {
+        "snippet": "Centered on Denali, the tallest <em>mountain</em> in North America, Denali is serviced by a single road"
+      },
+      "id": {
+        "raw": "park_denali"
+      },
+      "_meta": {
+        "score": 1.3484235
+      }
+    }
+  ],
+  "resultSearchTerm": "mountains",
+  "totalPages": 2,
+  "totalResults": 32,
+  "pagingStart": 1,
+  "pagingEnd": 20
+}

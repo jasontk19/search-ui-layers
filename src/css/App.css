@@ -1,3 +1,13 @@
+@media (max-width: 800px) {
+  div.sui-layout-sidebar {
+    background-color: #333;
+  }
+  button.sui-layout-sidebar-toggle {
+    background-color: #33425f;
+    color: #fff;
+  }
+}
+
 div.sui-layout-body, div.sui-layout-header {
   background: #333;
 }
@@ -21,10 +31,15 @@ div.sui-layout-body:after{
 }
 
 li.sui-result {
+  padding: 5px;
   border: 1px solid #333;
   background: #ccc;
 }
 
 ul.sui-paging .rc-pagination-item-active a {
   color: #eee;
+}
+
+h1, h2, h3, h4, h5 {
+  margin: 8px 12px;
 }

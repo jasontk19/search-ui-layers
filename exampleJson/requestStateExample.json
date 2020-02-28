@@ -1,0 +1,16 @@
+{
+  "current": 1,
+  "filters": [
+    {
+      "field": "dataCenters",
+      "values": [
+        "NSIDC_ECS"
+      ],
+      "type": "any"
+    }
+  ],
+  "resultsPerPage": 20,
+  "searchTerm": "",
+  "sortDirection": "",
+  "sortField": ""
+}

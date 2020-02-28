@@ -1,0 +1,38 @@
+{
+  "dataCenter": {
+    "LANCEAMSR2": 14,
+    "NSIDC_ECS": 33,
+    "GES_DISC": 117,
+    "LARC_ASDC": 65,
+    "ORNL_DAAC": 1,
+    "LPDAAC_ECS": 53,
+    "LARC": 33,
+    "LANCEMODIS": 26,
+    "LAADS": 71,
+    "MOPITT": 0,
+    "OMINRT": 8,
+    "SEDAC": 55,
+    "ASIPS": 5
+  },
+  "period": {
+    "daily": 658,
+    "monthly": 168,
+    "subdaily": 8,
+    "yearly": 19
+  },
+  "processingLevelId": {
+    "1": 1,
+    "2": 173,
+    "3": 170,
+    "4": 62,
+    "Level 2B": 7,
+    "1B": 24,
+    "Level 3": 25,
+    "2G": 1,
+    "1T": 0
+  },
+  "group": {
+    "overlays": 884,
+    "baselayers": 40
+  }
+}
