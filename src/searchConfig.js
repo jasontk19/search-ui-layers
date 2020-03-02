@@ -1,8 +1,8 @@
 import layers from './layers';
 import { buildInitialFacets, updateFacets } from './processLayers';
 
-const layersArray = Object.keys(layers).map(id => layers[id]);
-let initialFacetValues = buildInitialFacets(layersArray);
+const initialLayersArray = Object.keys(layers).map(id => layers[id]);
+let firstSearch = true;
 
 const initialState = {
   filters: [
@@ -14,7 +14,7 @@ const initialState = {
   ]
 };
 
-function getFacets(facetValues) {
+function formatFacets(facetValues) {
   const facets = {};
   for (const field in facetValues) {
     facets[field] = [{
@@ -33,22 +33,27 @@ function getFacets(facetValues) {
 // Matches results with an "AND" between filters.
 function getConjunctiveResults(requestState, queryConfig) {
   const { filters } = requestState;
-  return layersArray.filter(layer => {
+  return initialLayersArray.filter(layer => {
     return filters.every(({field, values}) => values.includes(layer[field]));
   });
 }
 
 async function onSearch(requestState, queryConfig) {
+  let facets;
   const results = getConjunctiveResults(requestState, queryConfig);
-  // let facets
-  // if (!initialFacetValues) {
-  //   facets = initialFacetValues = buildInitialFacets(layersArray);
-  // } else {
-  //   facets = getFacets(updateFacets(results));
-  // }
-  const facets = getFacets(initialFacetValues);
   
-  
+  if (firstSearch) {
+    firstSearch = false;
+    facets = formatFacets(buildInitialFacets(initialLayersArray));
+  } else {
+    // TODO - the solution is somewhere between these two functions.
+    // We want to keep each facet name but update the counts
+
+    // const updatedFacetCounts = updateFacets(results);
+    const updatedFacetCounts = buildInitialFacets(results);
+    facets = formatFacets(updatedFacetCounts);
+  }
+
   const responseState = {
     facets,
     results,
