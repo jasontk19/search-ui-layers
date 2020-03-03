@@ -51,6 +51,7 @@ export default class  App extends React.Component{
           label="Data Centers"
           filterType="any"
           isFilterable={true}
+          show={15}
         />
         <Facet
           field="period"

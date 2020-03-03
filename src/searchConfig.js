@@ -2,7 +2,6 @@ import { buildInitialFacets, updateFacets } from './processLayers';
 
 let initialLayersArray;
 let firstSearch = true;
-
 const initialState = {
   filters: [
     {
@@ -16,24 +15,29 @@ const initialState = {
 function formatFacets(facetValues) {
   const facets = {};
   for (const field in facetValues) {
+    const data = Object.keys(facetValues[field])
+      .map(key => ({
+        "count": facetValues[field][key],
+        "value": key 
+      }))
     facets[field] = [{
       "field": field,
       "type": "value",
-      "data":Object.keys(facetValues[field])
-        .map(key => ({
-          "count": facetValues[field][key],
-          "value": key 
-        })).sort((a, b) => b.count - a.count)
+      "data": data.sort((a, b) => b.count - a.count)
     }]
   }
   return facets;
 }
 
 // Matches results with an "AND" between filters.
-function getConjunctiveResults(requestState, queryConfig) {
-  const { filters } = requestState;
+function getConjunctiveResults(filters) {
   return initialLayersArray.filter(layer => {
-    return filters.every(({field, values}) => values.includes(layer[field]));
+    return filters.every(({field, values}) => {
+      const fieldValue = layer[field];
+      const noneSelected = values.includes('None');
+      const matches = values.includes(fieldValue) 
+      return matches || (noneSelected && !fieldValue);
+    });
   });
 }
 
@@ -45,21 +49,16 @@ function getConjunctiveResults(requestState, queryConfig) {
  */
 async function onSearch(requestState, queryConfig) {
   let facets;
-  const results = getConjunctiveResults(requestState, queryConfig);
-  
-  facets = formatFacets(buildInitialFacets(initialLayersArray));
-  
-  // if (firstSearch) {
-  //   firstSearch = false;
-  //   facets = formatFacets(buildInitialFacets(initialLayersArray));
-  // } else {
-  //   // TODO - the solution is somewhere between these two functions.
-  //   // We want to keep each facet name but update the counts
+  const { filters } = requestState;
+  const results = getConjunctiveResults(filters);
 
-  //   // const updatedFacetCounts = updateFacets(results);
-  //   const updatedFacetCounts = buildInitialFacets(results);
-  //   facets = formatFacets(updatedFacetCounts);
-  // }
+  if (firstSearch) {
+    facets = formatFacets(buildInitialFacets(initialLayersArray));
+    firstSearch = false;
+  } else {
+    const updatedFacetCounts = updateFacets(results, filters);
+    facets = formatFacets(updatedFacetCounts);
+  }
 
   return {
     facets,

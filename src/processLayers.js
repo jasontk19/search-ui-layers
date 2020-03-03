@@ -6,16 +6,16 @@ const facetFields = [
   'group'
 ]
 const facets = {};
-
+let initialLayers;
 const getFieldValue = (layer, field) => {
-  return layer[field] || 'NONE (broken)';
+  return layer[field] || 'None';
 }
 
 export function buildInitialFacets(layers) {
+  initialLayers = layers;
   facetFields.forEach(field => { facets[field] = {} })
-  layers.forEach(layer => {
+  initialLayers.forEach(layer => {
     facetFields.forEach(field => {
-      // TODO set 'None' value in config so filtering works
       const layerFieldValue = getFieldValue(layer, field); 
       if (facets[field].hasOwnProperty(layerFieldValue)) {
         facets[field][layerFieldValue]++
@@ -34,6 +34,7 @@ export function updateFacets(layers) {
       facets[field][fieldVal] = 0;
     }
   }
+
   layers.forEach(layer => {
     facetFields.forEach(field => {
       const layerFieldValue = getFieldValue(layer, field);
@@ -48,7 +49,7 @@ export function updateFacets(layers) {
  * @param {*} config 
  */
 export function parseJsonConfig({ layers, collections }) {
-  //TODO beware clashing keys
+  //WARNING beware clashing keys
   return Object.keys(layers).map(layerId => {
     const { id, title, conceptId } = layers[layerId];
     return { 
