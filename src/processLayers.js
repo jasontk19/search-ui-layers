@@ -1,11 +1,18 @@
 // TODO pull from a config?
 const facetFields = [ 
-  'dataCenter', 
-  'period', 
-  'processingLevelId', 
-  'group'
+  'data_center', 
+  'processing_level_id'
 ]
 const facets = {};
+
+const getFieldValue = (layer, field) => {
+  if (layer[field]) {
+    return layer[field];
+  } else if (layer['collection']) {
+    return layer['collection'][field];
+  }
+  return 'NONE (broken)';
+}
 
 export function buildInitialFacets(layers) {
   facetFields.forEach(field => {
@@ -14,11 +21,11 @@ export function buildInitialFacets(layers) {
   layers.forEach(layer => {
     facetFields.forEach(field => {
       // TODO set 'None' value in config so filtering works
-      const layerField = layer[field] || 'NONE (broken)'; 
-      if (facets[field].hasOwnProperty(layerField)) {
-        facets[field][layerField]++
+      const layerFieldValue = getFieldValue(layer, field); 
+      if (facets[field].hasOwnProperty(layerFieldValue)) {
+        facets[field][layerFieldValue]++
       } else {
-        facets[field][layerField] = 1;
+        facets[field][layerFieldValue] = 1;
       }
     })
   });
@@ -34,9 +41,21 @@ export function updateFacets(layers) {
   }
   layers.forEach(layer => {
     facetFields.forEach(field => {
-      const layerFieldValue = layer[field] || 'NONE (broken)';
+      const layerFieldValue = getFieldValue(layer, field);
       facets[field][layerFieldValue]++;
     })
   });
   return facets;
+}
+
+/**
+ * Map collection data to layer data from wv.json
+ * @param {*} config 
+ */
+export function parseJsonConfig({ layers, collections }) {
+  for (const layerId in layers) {
+    const { conceptId } = layers[layerId];
+    layers[layerId].collection = collections[conceptId]
+  }
+  return layers;
 }

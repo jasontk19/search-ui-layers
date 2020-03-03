@@ -1,13 +1,12 @@
-import layers from './layers';
 import { buildInitialFacets, updateFacets } from './processLayers';
 
-const initialLayersArray = Object.keys(layers).map(id => layers[id]);
+let initialLayersArray;
 let firstSearch = true;
 
 const initialState = {
   filters: [
     {
-      field: "dataCenter",
+      field: "data_center",
       values: ["ASIPS"],
       type: "any"
     }
@@ -34,10 +33,20 @@ function formatFacets(facetValues) {
 function getConjunctiveResults(requestState, queryConfig) {
   const { filters } = requestState;
   return initialLayersArray.filter(layer => {
-    return filters.every(({field, values}) => values.includes(layer[field]));
+    return filters.every(({field, values}) => {
+      let propOnLayer = values.includes(layer[field]);
+      let propOnCollection = layer['collection'] && values.includes(layer['collection'][field]);
+      return propOnLayer || propOnCollection;
+    });
   });
 }
 
+/**
+ * 
+ * @param {*} requestState 
+ * @param {*} queryConfig 
+ * @returns {*} responseState
+ */
 async function onSearch(requestState, queryConfig) {
   let facets;
   const results = getConjunctiveResults(requestState, queryConfig);
@@ -54,18 +63,23 @@ async function onSearch(requestState, queryConfig) {
     facets = formatFacets(updatedFacetCounts);
   }
 
-  const responseState = {
+  return {
     facets,
     results,
     resultSearchTerm: '',
     totalResults: results.length
-  }
-  return responseState;
+  };
 }
-export const config = {
-  debug: true, // TODO disable for prod
-  alwaysSearchOnInitialLoad: true,
-  trackUrlState: false,
-  initialState,
-  onSearch
-};
+
+
+export const getSearchConfig = (layerData) => {
+  initialLayersArray = Object.keys(layerData).map(id => layerData[id]);
+
+  return {
+    debug: true, // TODO disable for prod
+    alwaysSearchOnInitialLoad: true,
+    trackUrlState: false,
+    initialState,
+    onSearch
+  };
+}

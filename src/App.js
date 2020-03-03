@@ -1,29 +1,39 @@
-import React from "react";
-import { config as searchConfig } from "./searchConfig";
+import React from 'react';
 import {
   ErrorBoundary,
   Facet,
   SearchProvider,
   SearchBox,
-  Results,
-  Result,
   PagingInfo,
-  ResultsPerPage,
   Paging,
   Sorting,
   WithSearch
 } from "@elastic/react-search-ui";
-import {
-  BooleanFacet,
-  Layout,
-  SingleSelectFacet,
-  SingleLinksFacet
-} from "@elastic/react-search-ui-views";
-import "@elastic/react-search-ui-views/lib/styles/styles.css";
+import { BooleanFacet, Layout, SingleSelectFacet, SingleLinksFacet } 
+  from "@elastic/react-search-ui-views";
+import { getSearchConfig } from './searchConfig';
+import { parseJsonConfig } from './processLayers'
 
-export default function App() {
+export default class  App extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchConfig: undefined
+    }
+    this.renderSideContent = this.renderSideContent.bind(this);
+    this.renderResult = this.renderResult.bind(this);
+  }
 
-  const renderSideContent = (wasSearched) => {
+  async componentDidMount() {
+    const response = await fetch('./wv.json');
+    const json = await response.json();
+    const layerData = parseJsonConfig(json);
+    this.setState({
+      searchConfig: getSearchConfig(layerData)
+    })
+  }
+
+  renderSideContent(wasSearched) {
     // const SORT_OPTIONS = [
     //   {
     //     name: "Title",
@@ -37,7 +47,7 @@ export default function App() {
           <Sorting label={"Sort by"} sortOptions={SORT_OPTIONS} />
         )} */}
         <Facet
-          field="dataCenter"
+          field="data_center"
           label="Data Centers"
           filterType="any"
           isFilterable={true}
@@ -48,7 +58,7 @@ export default function App() {
           filterType="any"
         />
         <Facet
-          field="processingLevelId"
+          field="processing_level_id"
           label="Processing Level"
           filterType="any"
         />
@@ -61,39 +71,52 @@ export default function App() {
     )
   }
 
-  return (
-    <SearchProvider config={searchConfig}>
-      <WithSearch 
-        mapContextToProps={({ wasSearched, results }) => ({ wasSearched, results })}>
-        {({ wasSearched, results }) => {
-          return (
-            <div className="App">
-              <ErrorBoundary>
-                <Layout
-                  header={<SearchBox/>}
-                  sideContent={renderSideContent(wasSearched)}
-                  bodyContent={
-                    <ul className="sui-results-container">
-                      {(results || []).map((result, idx) => result.id && (
-                        <li key={result.id} className="sui-result">
-                          <h2>{result.title}</h2>
-                          <h4>
-                            {result.dataCenter},&nbsp; 
-                            {result.period},&nbsp;
-                            {result.processingLevelId}&nbsp;
-                          </h4>
-                        </li>
-                      ))}
-                    </ul>
-                  }
-                  bodyHeader={wasSearched && <PagingInfo />}
-                  bodyFooter={<Paging />}
-                />
-              </ErrorBoundary>
-            </div>
-          );
-        }}
-      </WithSearch>
-    </SearchProvider>
-  );
+  renderResult(result) {
+    if (!result) {
+      return;
+    }
+    const { data_center, processing_level_id } = result.collection;
+    const { period } = result;
+    return (
+      <li key={result.id} className="sui-result">
+        <h2>{result.title}</h2>
+        <h4>
+          {data_center},&nbsp; 
+          {period},&nbsp;
+          {processing_level_id}&nbsp;
+        </h4>
+      </li>
+    )
+  }
+
+  render () {
+    const { searchConfig } = this.state;  
+    return !searchConfig ? null : (
+      <SearchProvider config={searchConfig}>
+        <WithSearch 
+          mapContextToProps={({ wasSearched, results }) => ({ wasSearched, results })}>
+          {({ wasSearched, results }) => {
+            return (
+              <div className="App">
+                <ErrorBoundary>
+                  <Layout
+                    header={<SearchBox/>}
+                    sideContent={this.renderSideContent(wasSearched)}
+                    bodyContent={
+                      <ul className="sui-results-container">
+                        {(results || []).map(this.renderResult)}
+                      </ul>
+                    }
+                    bodyHeader={wasSearched && <PagingInfo />}
+                    bodyFooter={<Paging />}
+                  />
+                </ErrorBoundary>
+              </div>
+            );
+          }}
+        </WithSearch>
+      </SearchProvider>
+    );
+  }
+  
 }
