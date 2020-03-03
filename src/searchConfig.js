@@ -33,11 +33,7 @@ function formatFacets(facetValues) {
 function getConjunctiveResults(requestState, queryConfig) {
   const { filters } = requestState;
   return initialLayersArray.filter(layer => {
-    return filters.every(({field, values}) => {
-      let propOnLayer = values.includes(layer[field]);
-      let propOnCollection = layer['collection'] && values.includes(layer['collection'][field]);
-      return propOnLayer || propOnCollection;
-    });
+    return filters.every(({field, values}) => values.includes(layer[field]));
   });
 }
 
@@ -51,17 +47,19 @@ async function onSearch(requestState, queryConfig) {
   let facets;
   const results = getConjunctiveResults(requestState, queryConfig);
   
-  if (firstSearch) {
-    firstSearch = false;
-    facets = formatFacets(buildInitialFacets(initialLayersArray));
-  } else {
-    // TODO - the solution is somewhere between these two functions.
-    // We want to keep each facet name but update the counts
+  facets = formatFacets(buildInitialFacets(initialLayersArray));
+  
+  // if (firstSearch) {
+  //   firstSearch = false;
+  //   facets = formatFacets(buildInitialFacets(initialLayersArray));
+  // } else {
+  //   // TODO - the solution is somewhere between these two functions.
+  //   // We want to keep each facet name but update the counts
 
-    // const updatedFacetCounts = updateFacets(results);
-    const updatedFacetCounts = buildInitialFacets(results);
-    facets = formatFacets(updatedFacetCounts);
-  }
+  //   // const updatedFacetCounts = updateFacets(results);
+  //   const updatedFacetCounts = buildInitialFacets(results);
+  //   facets = formatFacets(updatedFacetCounts);
+  // }
 
   return {
     facets,

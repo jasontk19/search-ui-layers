@@ -1,23 +1,18 @@
 // TODO pull from a config?
 const facetFields = [ 
   'data_center', 
-  'processing_level_id'
+  'processing_level_id',
+  'period',
+  'group'
 ]
 const facets = {};
 
 const getFieldValue = (layer, field) => {
-  if (layer[field]) {
-    return layer[field];
-  } else if (layer['collection']) {
-    return layer['collection'][field];
-  }
-  return 'NONE (broken)';
+  return layer[field] || 'NONE (broken)';
 }
 
 export function buildInitialFacets(layers) {
-  facetFields.forEach(field => {
-    facets[field] = {}
-  })
+  facetFields.forEach(field => { facets[field] = {} })
   layers.forEach(layer => {
     facetFields.forEach(field => {
       // TODO set 'None' value in config so filtering works
@@ -53,9 +48,14 @@ export function updateFacets(layers) {
  * @param {*} config 
  */
 export function parseJsonConfig({ layers, collections }) {
-  for (const layerId in layers) {
-    const { conceptId } = layers[layerId];
-    layers[layerId].collection = collections[conceptId]
-  }
-  return layers;
+  //TODO beware clashing keys
+  return Object.keys(layers).map(layerId => {
+    const { id, title, conceptId } = layers[layerId];
+    return { 
+      ...layers[layerId], 
+      ...collections[conceptId], 
+      id,
+      title
+    };
+  });
 }

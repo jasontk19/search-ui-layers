@@ -75,11 +75,10 @@ export default class  App extends React.Component{
     if (!result) {
       return;
     }
-    const { data_center, processing_level_id } = result.collection;
-    const { period } = result;
+    const { id, title, subtitle, data_center, period, processing_level_id } = result;
     return (
-      <li key={result.id} className="sui-result">
-        <h2>{result.title}</h2>
+      <li key={id} className="sui-result">
+        <h2>{title}</h2>
         <h4>
           {data_center},&nbsp; 
           {period},&nbsp;
