@@ -12,7 +12,23 @@ import {
 import { BooleanFacet, Layout, SingleSelectFacet, SingleLinksFacet } 
   from "@elastic/react-search-ui-views";
 import { getSearchConfig } from './searchConfig';
-import { parseJsonConfig } from './processLayers'
+
+/**
+ * Map collection data to layer data from wv.json
+ * @param {*} config 
+ */
+function parseJsonConfig({ layers, collections }) {
+  //WARNING beware clashing keys
+  return Object.keys(layers).map(layerId => {
+    const { id, title, conceptId } = layers[layerId];
+    return { 
+      ...layers[layerId], 
+      ...collections[conceptId], 
+      id,
+      title
+    };
+  });
+}
 
 export default class  App extends React.Component{
   constructor(props) {

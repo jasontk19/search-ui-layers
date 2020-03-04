@@ -1,7 +1,14 @@
-import { buildInitialFacets, updateFacets } from './processLayers';
+import { get, set } from 'lodash';
 
+let facets;
 let initialLayersArray;
-let firstSearch = true;
+// TODO pull from a config?
+const facetFields = [ 
+  'data_center', 
+  'processing_level_id',
+  'period',
+  'group'
+]
 const initialState = {
   filters: [
     {
@@ -13,32 +20,48 @@ const initialState = {
 };
 
 function formatFacets(facetValues) {
-  const facets = {};
+  const formattedFacets = {};
   for (const field in facetValues) {
     const data = Object.keys(facetValues[field])
       .map(key => ({
         "count": facetValues[field][key],
         "value": key 
       }))
-    facets[field] = [{
+      formattedFacets[field] = [{
       "field": field,
       "type": "value",
       "data": data.sort((a, b) => b.count - a.count)
     }]
   }
-  return facets;
+  return formattedFacets;
 }
 
-// Matches results with an "AND" between filters.
-function getConjunctiveResults(filters) {
-  return initialLayersArray.filter(layer => {
-    return filters.every(({field, values}) => {
+function updateFacets(layer) {  
+  facetFields.forEach(field => {
+    const layerFieldValue = layer[field] || 'None';
+    const currentVal = get(facets, `${field}.${layerFieldValue}`) || 0;
+    set(facets, `${field}.${layerFieldValue}`, currentVal + 1);
+  })
+}
+
+function getResults(filters) {
+  let resultsArray = [];
+  facets = {};
+  initialLayersArray.forEach(layer => {
+    let filterMatch = filters.every(({field, values}) => {
       const fieldValue = layer[field];
       const noneSelected = values.includes('None');
       const matches = values.includes(fieldValue) 
       return matches || (noneSelected && !fieldValue);
-    });
+    }); 
+
+    if (filterMatch) {
+      resultsArray.push(layer);
+    }
+    updateFacets(layer);
+
   });
+  return resultsArray;
 }
 
 /**
@@ -48,20 +71,10 @@ function getConjunctiveResults(filters) {
  * @returns {*} responseState
  */
 async function onSearch(requestState, queryConfig) {
-  let facets;
   const { filters } = requestState;
-  const results = getConjunctiveResults(filters);
-
-  if (firstSearch) {
-    facets = formatFacets(buildInitialFacets(initialLayersArray));
-    firstSearch = false;
-  } else {
-    const updatedFacetCounts = updateFacets(results, filters);
-    facets = formatFacets(updatedFacetCounts);
-  }
-
+  const results = getResults(filters);
   return {
-    facets,
+    facets: formatFacets(facets),
     results,
     resultSearchTerm: '',
     totalResults: results.length
