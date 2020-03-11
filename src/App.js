@@ -49,7 +49,7 @@ export default class  App extends React.Component{
     })
   }
 
-  renderSideContent(wasSearched) {
+  renderSideContent(wasSearched, addFilter) {
     // const SORT_OPTIONS = [
     //   {
     //     name: "Title",
@@ -68,6 +68,10 @@ export default class  App extends React.Component{
           filterType="any"
           isFilterable={true}
           show={15}
+          addFilter={(name, value, filterType) => {
+            // console.log(name, value,);
+            addFilter(name, value, filterType);
+          }}
         />
         <Facet
           field="period"
@@ -110,14 +114,14 @@ export default class  App extends React.Component{
     return !searchConfig ? null : (
       <SearchProvider config={searchConfig}>
         <WithSearch 
-          mapContextToProps={({ wasSearched, results }) => ({ wasSearched, results })}>
-          {({ wasSearched, results }) => {
+          mapContextToProps={({ wasSearched, addFilter, results }) => ({ wasSearched, addFilter, results })}>
+          {({ wasSearched, addFilter, results }) => {
             return (
               <div className="App">
                 <ErrorBoundary>
                   <Layout
                     header={<SearchBox/>}
-                    sideContent={this.renderSideContent(wasSearched)}
+                    sideContent={this.renderSideContent(wasSearched, addFilter)}
                     bodyContent={
                       <ul className="sui-results-container">
                         {(results || []).map(this.renderResult)}
