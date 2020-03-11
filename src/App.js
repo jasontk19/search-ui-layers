@@ -77,6 +77,21 @@ export default class  App extends React.Component{
           label="Period"
           filterType="any"
         />
+        <Facet 
+          field="platforms_formatted"
+          label="Platform"
+          filterType="any"
+        />
+        <Facet 
+          field="instruments_formatted"
+          label="Instrument"
+          filterType="any"
+        />
+        <Facet 
+          field="collection_data_type"
+          label="Data Type"
+          filterType="any"
+        />
         <Facet
           field="processing_level_id"
           label="Processing Level"
@@ -98,7 +113,14 @@ export default class  App extends React.Component{
     }
     const { id, title, data_center, period, processing_level_id } = result;
     return (
-      <li key={id} className="sui-result">
+      
+      <li 
+        key={id} 
+        className="sui-result"
+        onClick={() => {
+          console.log(result);
+        }}
+      >
         <h2>{title}</h2>
         <h4>
           {data_center},&nbsp; 
@@ -114,7 +136,10 @@ export default class  App extends React.Component{
     return !searchConfig ? null : (
       <SearchProvider config={searchConfig}>
         <WithSearch 
-          mapContextToProps={({ wasSearched, addFilter, results }) => ({ wasSearched, addFilter, results })}>
+          mapContextToProps={
+            ({ wasSearched, addFilter, results }) => ({ wasSearched, addFilter, results })
+          }
+        >
           {({ wasSearched, addFilter, results }) => {
             return (
               <div className="App">
@@ -127,8 +152,8 @@ export default class  App extends React.Component{
                         {(results || []).map(this.renderResult)}
                       </ul>
                     }
-                    bodyHeader={wasSearched && <PagingInfo />}
-                    bodyFooter={<Paging />}
+                    // bodyHeader={wasSearched && <PagingInfo />}
+                    // bodyFooter={<Paging />}
                   />
                 </ErrorBoundary>
               </div>

@@ -8,8 +8,12 @@ const facetFields = [
   'data_center', 
   'processing_level_id',
   'period',
-  'group'
-]
+  'group',
+  'collection_data_type',
+  'platforms_formatted',
+  'instruments_formatted'
+];
+
 const initialState = {
   filters: [
     {
@@ -20,19 +24,33 @@ const initialState = {
   ]
 };
 
-function formatFacets(facetValues) {
+function formatPlatformInstrument(layer) {
+  layer.platforms_formatted = [];
+  layer.instruments_formatted = [];
+  (layer.Platforms || []).forEach(({ShortName, Instruments}) => {
+    layer.platforms_formatted.push(ShortName);
+    let instrumentName;
+    (Instruments || []).forEach(instrument => {
+      instrumentName = instrument["ShortName"];
+      layer.instruments_formatted.push(instrumentName);
+    });
+  });
+  delete layer['Platforms'];
+};
+
+function formatFacets(facetValues, firstFormat) {
   const formattedFacets = {};
   for (const field in facetValues) {
     const data = Object.keys(facetValues[field])
       .map(key => ({
         "count": facetValues[field][key],
         "value": key 
-      }))
-      formattedFacets[field] = [{
+      }));
+    formattedFacets[field] = [{
       "field": field,
       "type": "value",
       "data": data //.sort((a, b) => b.count - a.count)
-    }]
+    }];
   }
   return formattedFacets;
 }
@@ -46,15 +64,18 @@ function resetFacetCounts() {
 }
 
 function updateFacetCounts(facetField, layer) {
-  const layerFieldValue = layer[facetField] || 'None';
-  const currentVal = get(facets, `${facetField}.${layerFieldValue}`) || 0;
-  set(facets, `${facetField}.${layerFieldValue}`, currentVal + 1);
+  let fieldVal = layer[facetField] || 'None';
+  fieldVal = Array.isArray(fieldVal) ? fieldVal : [fieldVal];
+  fieldVal.forEach((value) => {
+    const currentVal = get(facets, `${facetField}.${value}`) || 0;
+    set(facets, `${facetField}.${value}`, currentVal + 1);
+  })
 } 
 
 function updateAllFacetCounts(currentFilters) {
   resetFacetCounts();
   facetFields.forEach(facetField => {
-    // Start with a filtered resultArray that has all OTHER facets applied
+    // Start with a filtered result array that has all OTHER facets applied
     const otherFilters = currentFilters.filter(f => f.field !== facetField);
     layersMatchFilters(initialLayersArray, otherFilters).forEach(layer => {
       updateFacetCounts(facetField, layer);
@@ -65,10 +86,11 @@ function updateAllFacetCounts(currentFilters) {
 function layersMatchFilters(layers, filters) {
   return layers.filter(layer => {
     return filters.every(({field, values}) => {
-      const fieldValue = layer[field];
+      let fieldVal = layer[field];
+      fieldVal = Array.isArray(fieldVal) ? fieldVal : [fieldVal];
       const noneSelected = values.includes('None');
-      const matches = values.includes(fieldValue) 
-      return matches || (noneSelected && !fieldValue);
+      const matches = values.some(value => fieldVal.includes(value)); 
+      return matches || (noneSelected && !fieldVal);
     }); 
   })
   
@@ -86,9 +108,12 @@ async function onSearch(requestState, queryConfig) {
   };
 }
 
-export const getSearchConfig = (layerData) => {
-  initialLayersArray = Object.keys(layerData).map(id => layerData[id]);
-  initialLayersArray.forEach(layer => {
+export const getSearchConfig = (layers) => {
+  initialLayersArray = layers;
+  layers.forEach(layer => {
+
+    formatPlatformInstrument(layer);
+
     facetFields.forEach(facetField => {
       updateFacetCounts(facetField, layer);
     });
