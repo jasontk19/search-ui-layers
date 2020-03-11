@@ -1,8 +1,10 @@
 import { get, set } from 'lodash';
 
-let facets;
+let facets = {};
+let initialFacets = {};
 let initialLayersArray;
 let previousFilters;
+
 // TODO pull from a config?
 const facetFields = [ 
   'data_center', 
@@ -14,7 +16,7 @@ const initialState = {
   filters: [
     {
       field: "data_center",
-      values: ["ASIPS"],
+      values: ["ASIPS", "LARC"],
       type: "any"
     }
   ]
@@ -67,16 +69,49 @@ function formatFacets(facetValues) {
   return formattedFacets;
 }
 
-// Update counts for each facet filter
-function updateFacets(layer, filterDiff) {  
-  facetFields.forEach(field => {
-    const layerFieldValue = layer[field] || 'None';
-    const currentVal = get(facets, `${field}.${layerFieldValue}`) || 0;
-    set(facets, `${field}.${layerFieldValue}`, currentVal + 1);
+function resetFacetCounts() {
+  Object.keys(facets).forEach(facetField => {
+    Object.keys(facets[facetField]).forEach(filterField => {
+      facets[facetField][filterField] = 0;
+    })
   })
 }
 
-// Determine if a given layers matches any of the enabled filters
+function getOtherFacetFilters(facetField, filters) {
+  return filters.filter(filter => filter.field !== facetField);
+}
+
+function updateAllFacetCounts(currentFilters) {
+  resetFacetCounts();
+  console.log(facets);
+  facetFields.forEach(facetField => {
+    
+    // Start with a filtered resultArray that has all OTHER facets applied
+    const otherFilters = getOtherFacetFilters(facetField, currentFilters);
+    const thisResultArray = initialLayersArray.filter(layer => {
+      return otherFilters.every(({field, values}) => {
+        const fieldValue = layer[field];
+        const noneSelected = values.includes('None');
+        const matches = values.includes(fieldValue) 
+        return matches || (noneSelected && !fieldValue);
+      }); 
+    });
+
+
+    // Get counts for each of this facet's filters 
+    thisResultArray.forEach(layer => {
+      const layerFieldValue = layer[facetField] || 'None';
+      const currentVal = get(facets, `${facetField}.${layerFieldValue}`) || 0;
+      set(facets, `${facetField}.${layerFieldValue}`, currentVal + 1);
+    });
+
+    // console.log(otherFilters);
+    // console.log(thisResultArray.length);
+  });
+  // console.log(facets);
+}
+
+// Determine if a given layer matches any of the passed filters
 function matchesFilters(layer, filters) {
   return filters.every(({field, values}) => {
     const fieldValue = layer[field];
@@ -86,21 +121,12 @@ function matchesFilters(layer, filters) {
   }); 
 }
 
+// Get result array based on current filters
 function getResults(currentFilters) {
-  let resultsArray = [];
-  let filterDiff = getFilterDiff(currentFilters, previousFilters);
-  facets = {};
-  console.log(filterDiff);
-
-  initialLayersArray.forEach(layer => {
-    if (matchesFilters(layer, currentFilters)) {
-      resultsArray.push(layer);
-    }
-    updateFacets(layer, filterDiff);
-  });
-
+  // facets = {};
+  updateAllFacetCounts(currentFilters);
   previousFilters = currentFilters;
-  return resultsArray;
+  return initialLayersArray.filter(layer => matchesFilters(layer, currentFilters));
 }
 
 async function onSearch(requestState, queryConfig) {
@@ -117,6 +143,14 @@ async function onSearch(requestState, queryConfig) {
 
 export const getSearchConfig = (layerData) => {
   initialLayersArray = Object.keys(layerData).map(id => layerData[id]);
+  initialLayersArray.forEach(layer => {
+    facetFields.forEach(facetField => {
+      const layerFieldValue = layer[facetField] || 'None';
+      const currentVal = get(initialFacets, `${facetField}.${layerFieldValue}`) || 0;
+      set(initialFacets, `${facetField}.${layerFieldValue}`, currentVal + 1);
+    });
+  })
+  facets = initialFacets;
 
   return {
     // debug: true, // TODO disable for prod
