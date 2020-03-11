@@ -120,7 +120,7 @@ export default class  App extends React.Component{
               <div className="App">
                 <ErrorBoundary>
                   <Layout
-                    header={<SearchBox/>}
+                    // header={<SearchBox/>}
                     sideContent={this.renderSideContent(wasSearched, addFilter)}
                     bodyContent={
                       <ul className="sui-results-container">
