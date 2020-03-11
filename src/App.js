@@ -66,10 +66,9 @@ export default class  App extends React.Component{
           field="data_center"
           label="Data Centers"
           filterType="any"
-          isFilterable={true}
+          // isFilterable={true}
           show={15}
-          addFilter={(name, value, filterType) => {
-            // console.log(name, value,);
+          addFilter={(name, value, filterType) => { 
             addFilter(name, value, filterType);
           }}
         />
@@ -82,6 +81,7 @@ export default class  App extends React.Component{
           field="processing_level_id"
           label="Processing Level"
           filterType="any"
+          show={15}
         />
         <Facet
           field="group"
@@ -96,7 +96,7 @@ export default class  App extends React.Component{
     if (!result) {
       return;
     }
-    const { id, title, subtitle, data_center, period, processing_level_id } = result;
+    const { id, title, data_center, period, processing_level_id } = result;
     return (
       <li key={id} className="sui-result">
         <h2>{title}</h2>
