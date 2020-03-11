@@ -2,7 +2,7 @@
 
 This repo is a rough example/demo of how to use the [elastic/search-ui library](https://github.com/elastic/search-ui) to quickly stand up a faceted filter based search UI without the use of a database or search API.  On the [NASA Worldview](https://github.com/nasa-gibs/worldview) project all of the data pertaining to our map layers are contained in a single JSON configuration file at deployment time, rather than behind an API.  Therefore, in order to build facet filter choices and counts, we needed to process that data within the UI layer.  For larger datasets this would not be reccommended but due to the relatively low number of map layer objects (~1000) this approach was simpler than the alternative.
 
-![App Screenshot](/screenshot.png)
+![App Screenshot](./screenshot.png)
 <br/>
 <hr/>
 <br/>
