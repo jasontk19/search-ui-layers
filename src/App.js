@@ -66,25 +66,29 @@ export default class  App extends React.Component{
           field="data_center"
           label="Data Centers"
           filterType="any"
-          // isFilterable={true}
           show={15}
-          addFilter={(name, value, filterType) => { 
-            addFilter(name, value, filterType);
-          }}
         />
-        <Facet
-          field="period"
-          label="Period"
+        <Facet 
+          field="projects_formatted"
+          label="Projects"
           filterType="any"
+          isFilterable={true}
         />
         <Facet 
           field="platforms_formatted"
           label="Platform"
           filterType="any"
+          isFilterable={true}
         />
         <Facet 
           field="instruments_formatted"
           label="Instrument"
+          filterType="any"
+          isFilterable={true}
+        />
+        <Facet
+          field="period"
+          label="Period"
           filterType="any"
         />
         <Facet 
@@ -123,12 +127,24 @@ export default class  App extends React.Component{
       >
         <h2>{title}</h2>
         <h4>
-          {data_center},&nbsp; 
-          {period},&nbsp;
-          {processing_level_id}&nbsp;
+          {data_center && `${data_center}, `}
+          {period && `${period}, `}
+          {processing_level_id && `${processing_level_id} `}
         </h4>
       </li>
     )
+  }
+
+  renderPagingInfo() {
+    return (<PagingInfo
+      view={({ totalResults }) => (
+        <div className="sui-paging-info">
+          <h2>
+            {totalResults} total results
+          </h2>
+        </div>
+      )}
+    />);
   }
 
   render () {
@@ -152,7 +168,7 @@ export default class  App extends React.Component{
                         {(results || []).map(this.renderResult)}
                       </ul>
                     }
-                    // bodyHeader={wasSearched && <PagingInfo />}
+                    bodyHeader={wasSearched && this.renderPagingInfo()}
                     // bodyFooter={<Paging />}
                   />
                 </ErrorBoundary>
