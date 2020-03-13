@@ -62,27 +62,9 @@ export default class  App extends React.Component{
         {/* {wasSearched && (
           <Sorting label={"Sort by"} sortOptions={SORT_OPTIONS} />
         )} */}
-        <Facet
-          field="data_center"
-          label="Data Centers"
-          filterType="any"
-          show={15}
-        />
         <Facet 
-          field="projects_formatted"
+          field="projects"
           label="Projects"
-          filterType="any"
-          isFilterable={true}
-        />
-        <Facet 
-          field="platforms_formatted"
-          label="Platform"
-          filterType="any"
-          isFilterable={true}
-        />
-        <Facet 
-          field="instruments_formatted"
-          label="Instrument"
           filterType="any"
           isFilterable={true}
         />
@@ -92,15 +74,21 @@ export default class  App extends React.Component{
           filterType="any"
         />
         <Facet 
-          field="collection_data_type"
+          field="collectionDataType"
           label="Data Type"
           filterType="any"
         />
         <Facet
-          field="processing_level_id"
+          field="processingLevelId"
           label="Processing Level"
           filterType="any"
-          show={15}
+          show={3}
+        />
+        <Facet
+          field="dataCenter"
+          label="Data Centers"
+          filterType="any"
+          show={3}
         />
         <Facet
           field="group"

@@ -5,15 +5,12 @@ let initialLayersArray;
 
 // TODO pull from a config?
 const facetFields = [ 
-  'data_center',
-  'archive_center', 
-  'processing_level_id',
+  'dataCenter', 
+  'processingLevelId',
   'period',
   'group',
-  'collection_data_type',
-  'platforms_formatted',
-  'instruments_formatted',
-  'projects_formatted'
+  'collectionDataType',
+  'projects'
 ];
 
 const initialState = {
