@@ -12,23 +12,8 @@ import {
 import { BooleanFacet, Layout, SingleSelectFacet, SingleLinksFacet } 
   from "@elastic/react-search-ui-views";
 import { getSearchConfig } from './searchConfig';
+import { parseJsonConfig } from './formatConfig';
 
-/**
- * Map collection data to layer data from wv.json
- * @param {*} config 
- */
-function parseJsonConfig({ layers, collections }) {
-  //WARNING beware clashing keys
-  return Object.keys(layers).map(layerId => {
-    const { id, title, conceptId } = layers[layerId];
-    return { 
-      ...layers[layerId], 
-      ...collections[conceptId], 
-      id,
-      title
-    };
-  });
-}
 
 export default class  App extends React.Component{
   constructor(props) {
@@ -63,19 +48,43 @@ export default class  App extends React.Component{
           <Sorting label={"Sort by"} sortOptions={SORT_OPTIONS} />
         )} */}
         <Facet 
-          field="projects"
-          label="Projects"
+          field="categories"
+          label="Category"
           filterType="any"
-          isFilterable={true}
         />
         <Facet
-          field="period"
+          field="facetPeriod"
           label="Period"
           filterType="any"
+          show={6}
         />
         <Facet 
           field="collectionDataType"
           label="Data Type"
+          filterType="any"
+        />
+        <Facet 
+          field="projects"
+          label="Project"
+          filterType="any"
+          isFilterable={true}
+        />
+        <Facet 
+          field="measurements"
+          label="Measurement"
+          filterType="any"
+          isFilterable={true}
+          show={5}
+        />
+        <Facet 
+          field="sources"
+          label="Source (Platform + Instrument)"
+          filterType="any"
+          isFilterable={true}
+        />
+        <Facet 
+          field="platforms"
+          label="Platform"
           filterType="any"
         />
         <Facet
@@ -86,7 +95,7 @@ export default class  App extends React.Component{
         />
         <Facet
           field="dataCenter"
-          label="Data Centers"
+          label="Data Center"
           filterType="any"
           show={3}
         />
@@ -110,7 +119,9 @@ export default class  App extends React.Component{
         key={id} 
         className="sui-result"
         onClick={() => {
-          console.log(result);
+          const intervals = (result.dateRanges || []).map(({dateInterval}) => dateInterval);
+          console.log(result)
+          console.log("Date intervals:", intervals);
         }}
       >
         <h2>{title}</h2>

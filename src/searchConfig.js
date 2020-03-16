@@ -2,17 +2,6 @@ import { get, set } from 'lodash';
 
 let facets = {};
 let initialLayersArray;
-
-// TODO pull from a config?
-const facetFields = [ 
-  'dataCenter', 
-  'processingLevelId',
-  'period',
-  'group',
-  'collectionDataType',
-  'projects'
-];
-
 const initialState = {
   filters: [
     // {
@@ -23,25 +12,19 @@ const initialState = {
   ]
 };
 
-function formatPlatformInstrument(layer) {
-  layer.platforms_formatted = [];
-  layer.instruments_formatted = [];
-  (layer.Platforms || []).forEach(({ShortName, Instruments}) => {
-    layer.platforms_formatted.push(ShortName.toUpperCase());
-    let instrumentName;
-    (Instruments || []).forEach(instrument => {
-      instrumentName = instrument["ShortName"];
-      layer.instruments_formatted.push(instrumentName.toUpperCase());
-    });
-  });
-};
-
-function formatProjects(layer) {
-  layer.projects_formatted = [];
-  (layer.Projects || []).forEach(({ ShortName }) => {
-    layer.projects_formatted.push(ShortName.toUpperCase());
-  })
-}
+// TODO pull from a config?
+const facetFields = [ 
+  'dataCenter', 
+  'processingLevelId',
+  'facetPeriod',
+  'group',
+  'collectionDataType',
+  'projects',
+  'sources',
+  'categories',
+  'measurements',
+  'platforms'
+];
 
 function formatFacets(facetValues, firstFormat) {
   const formattedFacets = {};
@@ -80,8 +63,8 @@ function updateFacetCounts(facetField, layer) {
   let fieldVal = layer[facetField] || 'None';
   fieldVal = Array.isArray(fieldVal) ? fieldVal : [fieldVal];
   fieldVal.forEach((value) => {
-    const currentVal = get(facets, `${facetField}.${value}`) || 0;
-    set(facets, `${facetField}.${value}`, currentVal + 1);
+    const currentVal = get(facets, `['${facetField}']['${value}']`) || 0;
+    set(facets, `['${facetField}']['${value}']`, currentVal + 1);
   })
 } 
 
@@ -124,11 +107,7 @@ async function onSearch(requestState, queryConfig) {
 export const getSearchConfig = (layers) => {
   initialLayersArray = layers;
   layers.forEach(layer => {
-
-    // TODO consider doing this at build time
-    formatProjects(layer)
-    formatPlatformInstrument(layer);
-
+    
     facetFields.forEach(facetField => {
       updateFacetCounts(facetField, layer);
     });
