@@ -23,7 +23,10 @@ const facetFields = [
   'sources',
   'categories',
   'measurements',
-  'platforms'
+  'platforms',
+  'active',
+  'track',
+  'daynight'
 ];
 
 function formatFacets(facetValues, firstFormat) {

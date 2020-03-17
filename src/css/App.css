@@ -8,6 +8,10 @@
   }
 }
 
+div.sui-layout-sidebar {
+  width: 30%;
+}
+
 div.sui-layout-body, div.sui-layout-header {
   background: #333;
 }

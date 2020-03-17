@@ -1,91 +1,103 @@
 import { forEach as lodashForEach } from 'lodash';
 
-const capitalizeFirstLetter = ([first,...rest]) => {
+const periodIntervalMap = {
+  daily: 'Day',
+  monthly: 'Month',
+  yearly: 'Year'
+}
+
+function capitalizeFirstLetter ([first, ...rest]) {
   return first ? first.toUpperCase() + rest.join('') : '';
 }
       
-
 function setLayerProp (layer, prop, value) {
-  if (layer[prop]) {
-    if (!layer[prop].includes(value)) {
-      layer[prop].push(value);
-    }
-  } else {
+  if (value && value.includes('Featured')) {
+    return;
+  }
+  if (layer[prop] && !layer[prop].includes(value)) {
+    layer[prop].push(value);
+  } else if (value) {
     layer[prop] = [value];
   }
 }
 
-function formatFacetProps({ layers, measurements, categories}) {
-
-  // Measurements
-  const measureKeys = Object.keys(measurements);
-  measureKeys.forEach((measureKey) => {
-    const measureObj = measurements[measureKey];
-    const sourceKeys = Object.keys(measureObj.sources)
-    sourceKeys.forEach((sourceKey) => {
-      const { settings } = measureObj.sources[sourceKey];
+function getMeasurementSourceFacetProps (layers, measurements) {
+  lodashForEach(measurements, (measureObj, measureKey) => {
+    lodashForEach(measureObj.sources, ({ settings }, sourceKey) => {
       settings.forEach((id) => {
         setLayerProp(layers[id], 'measurements', measureKey);
         setLayerProp(layers[id], 'sources', sourceKey);
       });
-    });
+    })
   });
+}
 
-  // Categories
-  Object.keys(categories).forEach(categoryKey => {
-    if (categoryKey === 'featured') return
-    const categoryObj = categories[categoryKey];
-    const subCategoryKeys = Object.keys(categoryObj);
-
-    subCategoryKeys.forEach(subCategoryKey => {
-      if (subCategoryKey === 'All') return;
-      const measurementArray = categoryObj[subCategoryKey].measurements;
-      measurementArray.forEach(measureKey => {
+function getCategoryFacetProps (layers, measurements, categories) {
+  lodashForEach(categories, (categoryObj, categoryKey) => {
+    if (categoryKey === 'featured') {
+      return
+    }
+    lodashForEach(categoryObj, (subCategoryObj, subCategoryKey) => {
+      if (subCategoryKey === 'All') {
+        return;
+      }
+      subCategoryObj.measurements.forEach(measureKey => {
         const { sources } = measurements[measureKey];
-        Object.keys(sources).forEach(sourceKey => {
-          sources[sourceKey].settings.forEach(id => {
+        lodashForEach(sources, ({settings}) => {
+          settings.forEach(id => {
             setLayerProp(layers[id], 'categories', subCategoryKey);
           }) 
         });
       });
     });
+  });  
+}
+
+function getLayerPeriodFacetProps(layer) {
+  const { period, dateRanges } = layer;
+  if (!dateRanges) {
+    layer.facetPeriod = period;
+    return;
+  }
+  const dateIntervals = (dateRanges || []).map(({dateInterval}) => dateInterval);
+  const firstInterval = Number.parseInt(dateIntervals[0], 10);
+  const consistentIntervals = dateIntervals.every(interval => {
+    const parsedInterval = Number.parseInt(interval, 10);
+    return parsedInterval === firstInterval;
   });
 
-
-  const periodIntervalMap = {
-    daily: 'Day',
-    monthly: 'Month',
-    yearly: 'Year'
+  layer.facetPeriod = period;
+  if (period === "subdaily" || firstInterval === 1) {
+    return
   }
 
-  // Layer Periods
-  lodashForEach(layers, layer => {
-    const { period, dateRanges } = layer;
-    if (!dateRanges) {
-      layer.facetPeriod = period;
-      return;
-    }
-    const dateIntervals = (dateRanges || []).map(({dateInterval}) => dateInterval);
-    const firstInterval = Number.parseInt(dateIntervals[0], 10);
-    const consistentIntervals = dateIntervals.every(interval => {
-      const parsedInterval = Number.parseInt(interval, 10);
-      return parsedInterval === firstInterval;
-    });
+  if (consistentIntervals && firstInterval <= 16) {
+    layer.facetPeriod = `${firstInterval}-${periodIntervalMap[period]}`;
+  } else {
+    layer.facetPeriod = `Multi-${periodIntervalMap[period]}`;
+  }
+}
 
-    layer.facetPeriod = period;
-    if (period === "subdaily" || firstInterval === 1) {
-      return
-    }
+function getActiveInactiveFacetProps(layer) {
+  layer.active = layer.inactive ? "No" : "Yes";
+}
 
-    if (consistentIntervals && firstInterval <= 16) {
-      layer.facetPeriod = `${firstInterval}-${periodIntervalMap[period]}`;
-    } else {
-      layer.facetPeriod = `Multi-${periodIntervalMap[period]}`;
-    }
-    
-    
+function getOrbitTrackRelatedFacetProps(layer, allLayers) {
+  (layer.tracks || []).forEach(orbitTrackId => {
+    const {track, daynight} = allLayers[orbitTrackId] || {};
+    setLayerProp(layer, 'track', track);
+    setLayerProp(layer, 'daynight', daynight);
   });
+}
 
+function formatFacetProps({ layers, measurements, categories}) {
+  getMeasurementSourceFacetProps(layers, measurements);
+  getCategoryFacetProps(layers, measurements, categories);
+  lodashForEach(layers, (layer) => {
+    getLayerPeriodFacetProps(layer);
+    getActiveInactiveFacetProps(layer);
+    getOrbitTrackRelatedFacetProps(layer, layers);
+  })
   return layers;
 }
 

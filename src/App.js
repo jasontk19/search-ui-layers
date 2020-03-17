@@ -51,6 +51,14 @@ export default class  App extends React.Component{
           field="categories"
           label="Category"
           filterType="any"
+          show={20}
+        />
+        <Facet 
+          field="measurements"
+          label="Measurement"
+          filterType="any"
+          isFilterable={true}
+          show={10}
         />
         <Facet
           field="facetPeriod"
@@ -58,33 +66,41 @@ export default class  App extends React.Component{
           filterType="any"
           show={6}
         />
+        <Facet
+          field="active"
+          label="Currently Active?"
+          filterType="any"
+        />
         <Facet 
           field="collectionDataType"
           label="Data Type"
           filterType="any"
         />
         <Facet 
-          field="projects"
-          label="Project"
+          field="track"
+          label="Track Asc/Desc"
           filterType="any"
-          isFilterable={true}
         />
         <Facet 
-          field="measurements"
-          label="Measurement"
+          field="daynight"
+          label="Track Day/Night"
+          filterType="any"
+        />
+        <Facet 
+          field="projects"
+          label="Project (From CMR)"
           filterType="any"
           isFilterable={true}
-          show={5}
         />
         <Facet 
           field="sources"
-          label="Source (Platform + Instrument)"
+          label="Source (From WV configs)"
           filterType="any"
           isFilterable={true}
         />
         <Facet 
           field="platforms"
-          label="Platform"
+          label="Platform (From CMR)"
           filterType="any"
         />
         <Facet
