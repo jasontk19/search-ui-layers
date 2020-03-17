@@ -1,4 +1,7 @@
-import { forEach as lodashForEach } from 'lodash';
+import { 
+  forEach as lodashForEach,
+  map as lodashMap
+ } from 'lodash';
 
 const periodIntervalMap = {
   daily: 'Day',
@@ -6,8 +9,10 @@ const periodIntervalMap = {
   yearly: 'Year'
 }
 
-function capitalizeFirstLetter ([first, ...rest]) {
-  return first ? first.toUpperCase() + rest.join('') : '';
+// TODO WARNING: capitalizing certain props could break other parts of WV 
+// that read these props, need to watch for that when integrating this code
+function capitalizeFirstLetter(string) {
+  return !string ? '' : string.charAt(0).toUpperCase() + string.slice(1);
 }
       
 function setLayerProp (layer, prop, value) {
@@ -56,7 +61,7 @@ function getCategoryFacetProps (layers, measurements, categories) {
 function getLayerPeriodFacetProps(layer) {
   const { period, dateRanges } = layer;
   if (!dateRanges) {
-    layer.facetPeriod = period;
+    layer.facetPeriod = capitalizeFirstLetter(period);
     return;
   }
   const dateIntervals = (dateRanges || []).map(({dateInterval}) => dateInterval);
@@ -66,7 +71,7 @@ function getLayerPeriodFacetProps(layer) {
     return parsedInterval === firstInterval;
   });
 
-  layer.facetPeriod = period;
+  layer.facetPeriod = capitalizeFirstLetter(period);
   if (period === "subdaily" || firstInterval === 1) {
     return
   }
@@ -83,24 +88,28 @@ function getActiveInactiveFacetProps(layer) {
 }
 
 function getOrbitTrackRelatedFacetProps(layer, allLayers) {
+  if (layer.id.includes('OrbitTracks')) {
+    layer.track = capitalizeFirstLetter(layer.track);
+    layer.daynight = capitalizeFirstLetter(layer.daynight);
+  }
   (layer.tracks || []).forEach(orbitTrackId => {
     const {track, daynight} = allLayers[orbitTrackId] || {};
-    setLayerProp(layer, 'track', track);
-    setLayerProp(layer, 'daynight', daynight);
+    setLayerProp(layer, 'track', capitalizeFirstLetter(track));
+    setLayerProp(layer, 'daynight', capitalizeFirstLetter(daynight));
   });
+}
+
+function capitalizeCMRProps (layer) {
+  const {projects, platforms} = layer;
+  layer.projects = (projects || []).map(proj => proj.toUpperCase());
+  layer.platforms = (platforms || []).map(plat => plat.toUpperCase());
 }
 
 function formatFacetProps({ layers, measurements, categories}) {
   getMeasurementSourceFacetProps(layers, measurements);
   getCategoryFacetProps(layers, measurements, categories);
-  lodashForEach(layers, (layer) => {
-    getLayerPeriodFacetProps(layer);
-    getActiveInactiveFacetProps(layer);
-    getOrbitTrackRelatedFacetProps(layer, layers);
-  })
   return layers;
 }
-
 
 /**
  * Map collection data to layer data from wv.json
@@ -109,15 +118,20 @@ function formatFacetProps({ layers, measurements, categories}) {
 export function parseJsonConfig(config) {
   const { collections } = config;
   const layers = formatFacetProps(config);
-  
-  return Object.keys(layers).map(layerId => {
+
+  return lodashMap(layers, (layer) => {
     //WARNING beware clashing keys
-    const { id, title, conceptId } = layers[layerId];
-    return { 
-      ...layers[layerId], 
+    const { id, title, conceptId } = layer;
+    const layerWithCollectionData ={  
+      ...layer, 
       ...collections[conceptId], 
       id,
       title
     };
+    getLayerPeriodFacetProps(layerWithCollectionData);
+    getActiveInactiveFacetProps(layerWithCollectionData);
+    getOrbitTrackRelatedFacetProps(layerWithCollectionData, layers);
+    capitalizeCMRProps(layerWithCollectionData);
+    return layerWithCollectionData
   });
 }

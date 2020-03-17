@@ -72,11 +72,6 @@ export default class  App extends React.Component{
           filterType="any"
         />
         <Facet 
-          field="collectionDataType"
-          label="Data Type"
-          filterType="any"
-        />
-        <Facet 
           field="track"
           label="Track Asc/Desc"
           filterType="any"
@@ -108,6 +103,11 @@ export default class  App extends React.Component{
           label="Processing Level"
           filterType="any"
           show={3}
+        />
+        <Facet 
+          field="collectionDataType"
+          label="Data Type"
+          filterType="any"
         />
         <Facet
           field="dataCenter"
