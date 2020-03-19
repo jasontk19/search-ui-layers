@@ -9,7 +9,8 @@ const initialState = {
     //   values: ["ASIPS", "LARC"],
     //   type: "any"
     // }
-  ]
+  ],
+  resultsPerPage: Infinity
 };
 
 // TODO pull from a config?
@@ -43,6 +44,12 @@ function formatFacets(facetValues, firstFormat) {
     if (noneIndex >= 0) {
       const [noneEntry] = data.splice(noneIndex, 1);
       data.splice(0,0,noneEntry);
+    }
+
+    const otherIndex = data.findIndex(item => item.value === "Other");
+    if (otherIndex >= 0) {
+      const [otherEntry] = data.splice(otherIndex, 1);
+      data.splice(data.length,0,otherEntry);
     }
 
     formattedFacets[field] = [{
@@ -96,7 +103,7 @@ function layersMatchFilters(layers, filters) {
 }
 
 async function onSearch(requestState, queryConfig) {
-  const { filters } = requestState;
+  const { filters, searchTerm } = requestState;
   const results = layersMatchFilters(initialLayersArray, filters);
   updateAllFacetCounts(filters);
   return {

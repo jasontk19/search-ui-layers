@@ -16,7 +16,7 @@ function capitalizeFirstLetter(string) {
 }
       
 function setLayerProp (layer, prop, value) {
-  if (value && value.includes('Featured')) {
+  if (prop === 'measurements' && (value && value.includes('Featured'))) {
     return;
   }
   if (layer[prop] && !layer[prop].includes(value)) {
@@ -75,7 +75,6 @@ function getLayerPeriodFacetProps(layer) {
   if (period === "subdaily" || firstInterval === 1) {
     return
   }
-
   if (consistentIntervals && firstInterval <= 16) {
     layer.facetPeriod = `${firstInterval}-${periodIntervalMap[period]}`;
   } else {
