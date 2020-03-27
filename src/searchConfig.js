@@ -1,17 +1,26 @@
-import { get, set } from 'lodash';
+import { 
+  get, 
+  set, 
+  forEach as lodashForEach,
+  map as lodashMap  
+} from 'lodash';
 
 let facets = {};
 let initialLayersArray;
 const initialState = {
   filters: [
     // {
-    //   field: "data_center",
-    //   values: ["ASIPS", "LARC"],
+    //   field: "facetPeriod",
+    //   values: ["Multi-Day"],
     //   type: "any"
     // }
   ],
   resultsPerPage: Infinity
 };
+
+const hideZeroCountFields = [
+  'measurements'
+]
 
 // TODO pull from a config?
 const facetFields = [ 
@@ -30,34 +39,46 @@ const facetFields = [
   'daynight'
 ];
 
+// Move "None" or "Other" entries to the top or bottom respectively
+function moveNoneOther(data) {
+  const noneIndex = data.findIndex(item => item.value === "None");
+  if (noneIndex >= 0) {
+    const [noneEntry] = data.splice(noneIndex, 1);
+    data.splice(0,0,noneEntry);
+  }
+  const otherIndex = data.findIndex(item => item.value === "Other");
+  if (otherIndex >= 0) {
+    const [otherEntry] = data.splice(otherIndex, 1);
+    data.splice(data.length,0,otherEntry);
+  }
+  return data;
+}
+
+// Convert facet count obj into the format search-ui expects
 function formatFacets(facetValues, firstFormat) {
   const formattedFacets = {};
-  for (const field in facetValues) {
-    const data = Object.keys(facetValues[field])
+  lodashForEach(facetValues, (facetObj, field) => {
+    let data = Object.keys(facetObj)
       .map(key => ({
         count: facetValues[field][key],
         value: key 
       }))
       .sort((a, b) => a.value.localeCompare(b.value));
 
-    const noneIndex = data.findIndex(item => item.value === "None");
-    if (noneIndex >= 0) {
-      const [noneEntry] = data.splice(noneIndex, 1);
-      data.splice(0,0,noneEntry);
-    }
+    data = moveNoneOther(data);
 
-    const otherIndex = data.findIndex(item => item.value === "Other");
-    if (otherIndex >= 0) {
-      const [otherEntry] = data.splice(otherIndex, 1);
-      data.splice(data.length,0,otherEntry);
+    if (hideZeroCountFields.includes(field)) {
+      data = data
+        .filter((item) => item.count > 0)
+        .sort((a, b) => b.count - a.count);
     }
-
+        
     formattedFacets[field] = [{
       field,
       type: "value",
       data
     }];
-  }
+  });
   return formattedFacets;
 }
 
@@ -114,10 +135,9 @@ async function onSearch(requestState, queryConfig) {
   };
 }
 
-export const getSearchConfig = (layers) => {
+export default function getSearchConfig(layers) {
   initialLayersArray = layers;
   layers.forEach(layer => {
-    
     facetFields.forEach(facetField => {
       updateFacetCounts(facetField, layer);
     });

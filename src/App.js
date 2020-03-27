@@ -11,8 +11,8 @@ import {
 } from "@elastic/react-search-ui";
 import { BooleanFacet, Layout, SingleSelectFacet, SingleLinksFacet } 
   from "@elastic/react-search-ui-views";
-import { getSearchConfig } from './searchConfig';
-import { parseJsonConfig } from './formatConfig';
+import getSearchConfig from './searchConfig';
+import parseJsonConfig from './formatConfig';
 
 
 export default class  App extends React.Component{
@@ -35,13 +35,13 @@ export default class  App extends React.Component{
   }
 
   renderSideContent(wasSearched, addFilter) {
-    // const SORT_OPTIONS = [
-    //   {
-    //     name: "Title",
-    //     value: "title",
-    //     direction: "asc"
-    //   }
-    // ];
+    const SORT_OPTIONS = [
+      {
+        name: "Title",
+        value: "title",
+        direction: "asc"
+      }
+    ];
     return (
       <div>
         {/* {wasSearched && (
@@ -58,13 +58,13 @@ export default class  App extends React.Component{
           label="Measurement"
           filterType="any"
           isFilterable={true}
-          show={10}
+          show={5}
         />
         <Facet
           field="facetPeriod"
           label="Period"
           filterType="any"
-          show={6}
+          show={10}
         />
         <Facet
           field="active"
@@ -128,7 +128,7 @@ export default class  App extends React.Component{
     if (!result) {
       return;
     }
-    const { id, title, data_center, period, processing_level_id } = result;
+    const { id, title, dataCenter, period, processingLevelId } = result;
     return (
       
       <li 
@@ -142,9 +142,9 @@ export default class  App extends React.Component{
       >
         <h2>{title}</h2>
         <h4>
-          {data_center && `${data_center}, `}
+          {dataCenter && `${dataCenter}, `}
           {period && `${period}, `}
-          {processing_level_id && `${processing_level_id} `}
+          {processingLevelId && `${processingLevelId} `}
         </h4>
       </li>
     )

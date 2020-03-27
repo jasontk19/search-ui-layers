@@ -72,11 +72,21 @@ function getLayerPeriodFacetProps(layer) {
   });
 
   layer.facetPeriod = capitalizeFirstLetter(period);
+
   if (period === "subdaily" || firstInterval === 1) {
     return
   }
+  
   if (consistentIntervals && firstInterval <= 16) {
     layer.facetPeriod = `${firstInterval}-${periodIntervalMap[period]}`;
+  } else if (layer.id.includes('7Day')) {
+    layer.facetPeriod = '7-Day'
+  } else if (layer.id.includes('5Day')) {
+    layer.facetPeriod = '5-Day'
+  } else if (layer.id.includes('Monthly')) {
+    layer.facetPeriod = 'Monthly'
+  } else if (layer.id.includes('Weekly')) {
+    layer.facetPeriod = '7-Day'
   } else {
     layer.facetPeriod = `Multi-${periodIntervalMap[period]}`;
   }
@@ -114,7 +124,7 @@ function formatFacetProps({ layers, measurements, categories}) {
  * Map collection data to layer data from wv.json
  * @param {*} config 
  */
-export function parseJsonConfig(config) {
+export default function parseJsonConfig(config) {
   const { collections } = config;
   const layers = formatFacetProps(config);
 
