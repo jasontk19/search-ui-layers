@@ -16,6 +16,11 @@ div.sui-layout-body, div.sui-layout-header {
   background: #333;
 }
 
+legend.sui-facet__title {
+  font-weight: 600;
+  color: #eee;
+}
+
 div.sui-boolean-facet,
 div.sui-multi-checkbox-facet,
 a.sui-single-option-facet__link,
@@ -28,6 +33,10 @@ span.sui-facet__count,
 span.sui-boolean-facet__option-count,
 span.sui-multi-checkbox-facet__option-count {
   color: #ccc;
+}
+
+button.sui-facet-view-more {
+  color: #a8b6fa;
 }
 
 div.sui-layout-body:after{
